@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -87,4 +88,25 @@ func makeRequest(req *http.Request, params url.Values) (*http.Response, error) {
 	req.Header.Set("Content-Length", strconv.Itoa(len(formEnc)))
 	req.Header.Set("Authorization", authClient.AuthorizationHeader(creds, "POST", req.URL, params))
 	return httpClient.Do(req)
+}
+
+type tweet struct {
+	Text string
+}
+
+const twitterAPI string = "https://stream.twitter.com/1.1/statuses/filter.json"
+
+func readFromTwitter(votes chan<- string) {
+	options, err := loadOptions()
+	if err != nil {
+		log.Println("選択肢の読み込みに失敗しました:", err)
+		return
+	}
+	u, err := url.Parse(twitterAPI)
+	if err != nil {
+		log.Println("URLの解析に失敗しました:", err)
+		return
+	}
+	query := make(url.Values)
+	query.Set("track", strings.Join())
 }
